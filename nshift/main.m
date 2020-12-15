@@ -1,4 +1,5 @@
 // Copyright 2017 Jenghis
+// Copyright 2020 Kamil Cholewiński <github.com/rollcat>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,10 +17,19 @@
 #import "CBBlueLightClient.h"
 
 int main(int argc, const char * argv[]) {
-    if (argc == 1) { return 0; }
-    float strength = [[NSString stringWithUTF8String:argv[1]] floatValue] / 100;
     CBBlueLightClient *client = [[CBBlueLightClient alloc] init];
-    if (strength != 0.0) { [client setStrength:strength commit:true]; }
-    [client setEnabled:(strength != 0.0)];
+    for (int i = 1; i < argc; i++) {
+        NSString *arg = [NSString stringWithUTF8String:argv[i]];
+        if ([arg isEqualTo:@"on"]) {
+            [client setEnabled:true];
+            break;
+        }
+        if ([arg isEqualTo:@"off"]) {
+            [client setEnabled:false];
+            break;
+        }
+        float strength = [arg floatValue] / 100;
+        [client setStrength:strength commit:true];
+    }
     return 0;
 }
